@@ -929,7 +929,7 @@ let latestRound = null;
 let isLoadingWinning = false;
 
 async function fetchLottoRound(round){
-  const url = `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${round}`;
+  const url = `/api/lotto?drwNo=${round}`;
   const res = await fetch(url);
   const data = await res.json();
   if(data.returnValue !== 'success') return null;
