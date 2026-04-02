@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>봄날의 로또 — 행운의 번호 추천</title>
+<title>계절의 로또 — 행운의 번호 추천</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -11,19 +11,39 @@
 
   :root{
     --bg:#fef7f0;
-    --pink-soft:#f8c8d4;
-    --pink-deep:#e8829a;
-    --green-spring:#8fbc8f;
-    --green-soft:#d4e8d0;
-    --cream:#fff8f0;
+    --accent:#e8829a;
+    --accent-soft:#f8c8d4;
+    --accent-secondary:#8fbc8f;
+    --card-bg:linear-gradient(165deg,#fff 0%,#fff5f8 50%,#f0faf0 100%);
+    --card-glow1:rgba(248,200,212,.4);
+    --card-glow2:rgba(212,232,208,.5);
+    --card-shadow:rgba(232,130,154,.12);
+    --card-border:rgba(232,130,154,.12);
     --text:#3a2e2e;
     --text-light:#7a6b6b;
+    --btn-grad:linear-gradient(135deg,#e8829a 0%,#d4739a 50%,#8fbc8f 100%);
+    --btn-shadow:rgba(232,130,154,.35);
+    --history-border:rgba(232,130,154,.08);
+    --history-hover:rgba(232,130,154,.1);
+    transition:all .6s ease;
+  }
 
-    --ball-yellow:#fbc400;
-    --ball-blue:#69c8f2;
-    --ball-red:#ff7272;
-    --ball-gray:#aaa;
-    --ball-green:#b0d840;
+  [data-theme="summer"]{
+    --bg:#f0f8ff;
+    --accent:#0891b2;
+    --accent-soft:#a5f3fc;
+    --accent-secondary:#f59e0b;
+    --card-bg:linear-gradient(165deg,#fff 0%,#ecfeff 50%,#fef3c7 100%);
+    --card-glow1:rgba(165,243,252,.4);
+    --card-glow2:rgba(254,243,199,.5);
+    --card-shadow:rgba(8,145,178,.12);
+    --card-border:rgba(8,145,178,.12);
+    --text:#1e3a4a;
+    --text-light:#5a7a8a;
+    --btn-grad:linear-gradient(135deg,#0891b2 0%,#06b6d4 50%,#f59e0b 100%);
+    --btn-shadow:rgba(8,145,178,.35);
+    --history-border:rgba(8,145,178,.08);
+    --history-hover:rgba(8,145,178,.1);
   }
 
   html{font-size:16px;scroll-behavior:smooth}
@@ -35,15 +55,14 @@
     min-height:100vh;
     overflow-x:hidden;
     position:relative;
+    transition:background .6s ease,color .6s ease;
   }
 
-  /* ── 벚꽃 잎 캔버스 ── */
   #petals-canvas{
     position:fixed;inset:0;
     pointer-events:none;z-index:0;
   }
 
-  /* ── 메인 레이아웃 ── */
   .page-wrapper{
     position:relative;z-index:1;
     max-width:640px;margin:0 auto;
@@ -52,50 +71,106 @@
     display:flex;flex-direction:column;align-items:center;
   }
 
+  /* ── 테마 토글 ── */
+  .theme-toggle{
+    position:fixed;
+    top:1.2rem;right:1.2rem;
+    z-index:10;
+    width:64px;height:34px;
+    border-radius:34px;
+    border:none;
+    cursor:pointer;
+    background:#f8c8d4;
+    box-shadow:0 2px 12px rgba(0,0,0,.1),inset 0 1px 2px rgba(255,255,255,.5);
+    transition:background .4s ease;
+    padding:3px;
+  }
+
+  [data-theme="summer"] .theme-toggle{
+    background:#67e8f9;
+  }
+
+  .toggle-knob{
+    width:28px;height:28px;
+    border-radius:50%;
+    background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1rem;
+    box-shadow:0 1px 4px rgba(0,0,0,.15);
+    transition:transform .4s cubic-bezier(.68,-.55,.27,1.55);
+    pointer-events:none;
+  }
+
+  [data-theme="summer"] .toggle-knob{
+    transform:translateX(30px);
+  }
+
+  .toggle-label{
+    position:fixed;
+    top:3.4rem;right:1.2rem;
+    z-index:10;
+    font-size:.65rem;
+    color:var(--text-light);
+    letter-spacing:.06em;
+    text-align:center;
+    width:64px;
+    transition:color .4s ease;
+  }
+
   /* ── 헤더 ── */
   header{text-align:center;margin-bottom:2.5rem}
 
   .branch-deco{
     display:block;margin:0 auto 0.5rem;
     width:120px;height:auto;opacity:.85;
+    transition:filter .4s ease;
+  }
+
+  .branch-deco.spring{
     filter:drop-shadow(0 2px 6px rgba(232,130,154,.3));
+  }
+  .branch-deco.summer{
+    filter:drop-shadow(0 2px 6px rgba(8,145,178,.3));
   }
 
   h1{
     font-family:'Noto Serif KR',serif;
     font-weight:900;font-size:2.2rem;
-    background:linear-gradient(135deg,var(--pink-deep),#c76b8a);
+    background:linear-gradient(135deg,var(--accent),var(--accent-secondary));
     -webkit-background-clip:text;-webkit-text-fill-color:transparent;
     background-clip:text;
     letter-spacing:-.02em;
     line-height:1.3;
+    transition:all .4s ease;
   }
 
   .subtitle{
     font-size:.95rem;color:var(--text-light);
     margin-top:.4rem;letter-spacing:.04em;
+    transition:color .4s ease;
   }
 
   /* ── 메인 카드 ── */
   .main-card{
     width:100%;
-    background:linear-gradient(165deg,#fff 0%,#fff5f8 50%,#f0faf0 100%);
+    background:var(--card-bg);
     border-radius:28px;
     padding:2.5rem 2rem;
     box-shadow:
-      0 4px 24px rgba(232,130,154,.12),
+      0 4px 24px var(--card-shadow),
       0 1px 4px rgba(0,0,0,.04),
       inset 0 1px 0 rgba(255,255,255,.8);
-    border:1px solid rgba(232,130,154,.12);
+    border:1px solid var(--card-border);
     position:relative;
     overflow:hidden;
+    transition:box-shadow .4s ease,border-color .4s ease;
   }
 
   .main-card::before{
     content:'';position:absolute;
     top:-40px;right:-40px;
     width:160px;height:160px;
-    background:radial-gradient(circle,rgba(248,200,212,.4) 0%,transparent 70%);
+    background:radial-gradient(circle,var(--card-glow1) 0%,transparent 70%);
     border-radius:50%;pointer-events:none;
   }
 
@@ -103,16 +178,15 @@
     content:'';position:absolute;
     bottom:-30px;left:-30px;
     width:120px;height:120px;
-    background:radial-gradient(circle,rgba(212,232,208,.5) 0%,transparent 70%);
+    background:radial-gradient(circle,var(--card-glow2) 0%,transparent 70%);
     border-radius:50%;pointer-events:none;
   }
 
-  /* ── 번호 디스플레이 영역 ── */
+  /* ── 번호 디스플레이 ── */
   .numbers-section{
     text-align:center;
     margin-bottom:2rem;
-    position:relative;
-    z-index:1;
+    position:relative;z-index:1;
   }
 
   .section-label{
@@ -125,26 +199,18 @@
   }
 
   .balls-row{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:.6rem;
-    flex-wrap:wrap;
-    min-height:72px;
+    display:flex;justify-content:center;align-items:center;
+    gap:.6rem;flex-wrap:wrap;min-height:72px;
   }
 
   .ball{
-    width:58px;height:58px;
-    border-radius:50%;
+    width:58px;height:58px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;
     font-family:'Noto Serif KR',serif;
-    font-weight:900;font-size:1.25rem;
-    color:#fff;
+    font-weight:900;font-size:1.25rem;color:#fff;
     text-shadow:0 1px 2px rgba(0,0,0,.2);
-    position:relative;
-    opacity:0;
+    position:relative;opacity:0;
     transform:translateY(40px) scale(.3) rotate(-180deg);
-    transition:none;
     box-shadow:
       inset 0 -4px 8px rgba(0,0,0,.15),
       inset 0 4px 8px rgba(255,255,255,.3),
@@ -153,21 +219,14 @@
 
   .ball::before{
     content:'';position:absolute;
-    top:6px;left:12px;
-    width:18px;height:10px;
-    background:rgba(255,255,255,.35);
-    border-radius:50%;
+    top:6px;left:12px;width:18px;height:10px;
+    background:rgba(255,255,255,.35);border-radius:50%;
     transform:rotate(-20deg);
   }
 
-  .ball.revealed{
-    opacity:1;
-    transform:translateY(0) scale(1) rotate(0deg);
-  }
+  .ball.revealed{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}
 
-  .ball.bounce{
-    animation:ballBounce .7s cubic-bezier(.34,1.56,.64,1) forwards;
-  }
+  .ball.bounce{animation:ballBounce .7s cubic-bezier(.34,1.56,.64,1) forwards}
 
   @keyframes ballBounce{
     0%{opacity:0;transform:translateY(60px) scale(.2) rotate(-200deg)}
@@ -184,61 +243,38 @@
 
   .separator{
     font-size:1.6rem;font-weight:700;
-    color:var(--pink-deep);
-    margin:0 .2rem;
-    opacity:0;
-    transition:opacity .3s ease;
+    color:var(--accent);margin:0 .2rem;
+    opacity:0;transition:opacity .3s ease;
   }
   .separator.show{opacity:1}
 
   .bonus-label{
-    display:block;
-    font-size:.65rem;
-    color:var(--text-light);
-    margin-top:.3rem;
-    letter-spacing:.1em;
-    opacity:0;
-    transition:opacity .4s ease .2s;
+    display:block;font-size:.65rem;color:var(--text-light);
+    margin-top:.3rem;letter-spacing:.1em;
+    opacity:0;transition:opacity .4s ease .2s;
   }
   .bonus-label.show{opacity:1}
 
-  .bonus-wrap{
-    display:flex;flex-direction:column;align-items:center;
-  }
+  .bonus-wrap{display:flex;flex-direction:column;align-items:center}
 
-  /* ── 빈 상태 ── */
   .empty-state{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    min-height:72px;
-    color:var(--text-light);
-    font-size:.95rem;
-    gap:.5rem;
+    display:flex;align-items:center;justify-content:center;
+    min-height:72px;color:var(--text-light);font-size:.95rem;gap:.5rem;
   }
-
   .empty-state .flower{font-size:1.4rem;opacity:.7}
 
   /* ── 버튼 ── */
   .btn-generate{
-    display:block;
-    margin:0 auto;
-    padding:1rem 2.8rem;
-    border:none;
-    border-radius:60px;
-    font-family:'Noto Serif KR',serif;
-    font-weight:700;
-    font-size:1.05rem;
+    display:block;margin:0 auto;padding:1rem 2.8rem;
+    border:none;border-radius:60px;
+    font-family:'Noto Serif KR',serif;font-weight:700;font-size:1.05rem;
     color:#fff;
-    background:linear-gradient(135deg,var(--pink-deep) 0%,#d4739a 50%,var(--green-spring) 100%);
+    background:var(--btn-grad);
     background-size:200% 200%;
     animation:gradientShift 4s ease infinite;
-    cursor:pointer;
-    position:relative;z-index:1;
-    box-shadow:
-      0 4px 20px rgba(232,130,154,.35),
-      0 2px 6px rgba(0,0,0,.08);
-    transition:transform .2s ease,box-shadow .2s ease;
+    cursor:pointer;position:relative;z-index:1;
+    box-shadow:0 4px 20px var(--btn-shadow),0 2px 6px rgba(0,0,0,.08);
+    transition:transform .2s ease,box-shadow .2s ease,background .4s ease;
     letter-spacing:.05em;
   }
 
@@ -249,125 +285,66 @@
 
   .btn-generate:hover{
     transform:translateY(-2px) scale(1.03);
-    box-shadow:
-      0 8px 30px rgba(232,130,154,.4),
-      0 4px 10px rgba(0,0,0,.1);
+    box-shadow:0 8px 30px var(--btn-shadow),0 4px 10px rgba(0,0,0,.1);
   }
-
-  .btn-generate:active{
-    transform:translateY(0) scale(.98);
-  }
-
-  .btn-generate:disabled{
-    opacity:.6;cursor:not-allowed;
-    transform:none;
-  }
-
+  .btn-generate:active{transform:translateY(0) scale(.98)}
+  .btn-generate:disabled{opacity:.6;cursor:not-allowed;transform:none}
   .btn-generate .btn-icon{
-    margin-right:.4rem;
-    display:inline-block;
-    transition:transform .3s ease;
+    margin-right:.4rem;display:inline-block;transition:transform .3s ease;
   }
-
-  .btn-generate:hover .btn-icon{
-    transform:rotate(20deg) scale(1.15);
-  }
+  .btn-generate:hover .btn-icon{transform:rotate(20deg) scale(1.15)}
 
   /* ── 이력 섹션 ── */
-  .history-section{
-    width:100%;
-    margin-top:2.5rem;
-    position:relative;z-index:1;
-  }
+  .history-section{width:100%;margin-top:2.5rem;position:relative;z-index:1}
 
   .history-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:1rem;
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;
   }
 
   .history-title{
-    font-family:'Noto Serif KR',serif;
-    font-weight:700;
-    font-size:1.05rem;
-    color:var(--text);
+    font-family:'Noto Serif KR',serif;font-weight:700;font-size:1.05rem;color:var(--text);
   }
 
   .history-clear{
-    font-size:.75rem;
-    color:var(--text-light);
-    background:none;border:none;
-    cursor:pointer;font-family:inherit;
-    padding:.2rem .6rem;
-    border-radius:12px;
-    transition:all .2s ease;
+    font-size:.75rem;color:var(--text-light);
+    background:none;border:none;cursor:pointer;font-family:inherit;
+    padding:.2rem .6rem;border-radius:12px;transition:all .2s ease;
   }
+  .history-clear:hover{background:var(--history-hover);color:var(--accent)}
 
-  .history-clear:hover{
-    background:rgba(232,130,154,.1);
-    color:var(--pink-deep);
-  }
-
-  .history-list{
-    display:flex;
-    flex-direction:column;
-    gap:.75rem;
-  }
+  .history-list{display:flex;flex-direction:column;gap:.75rem}
 
   .history-item{
     background:rgba(255,255,255,.7);
-    border:1px solid rgba(232,130,154,.08);
-    border-radius:16px;
-    padding:.9rem 1.2rem;
-    display:flex;
-    align-items:center;
-    gap:.7rem;
+    border:1px solid var(--history-border);
+    border-radius:16px;padding:.9rem 1.2rem;
+    display:flex;align-items:center;gap:.7rem;
     backdrop-filter:blur(8px);
     animation:historySlide .4s cubic-bezier(.25,.46,.45,.94) forwards;
-    opacity:0;
-    transform:translateY(12px);
+    opacity:0;transform:translateY(12px);
   }
 
-  @keyframes historySlide{
-    to{opacity:1;transform:translateY(0)}
-  }
+  @keyframes historySlide{to{opacity:1;transform:translateY(0)}}
 
-  .history-index{
-    font-size:.7rem;
-    color:var(--text-light);
-    font-weight:700;
-    min-width:1.4rem;
-    text-align:center;
-  }
+  .history-index{font-size:.7rem;color:var(--text-light);font-weight:700;min-width:1.4rem;text-align:center}
 
-  .history-balls{
-    display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;
-    flex:1;
-  }
+  .history-balls{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;flex:1}
 
   .history-ball{
-    width:32px;height:32px;
-    border-radius:50%;
+    width:32px;height:32px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;
-    font-family:'Noto Serif KR',serif;
-    font-weight:700;font-size:.7rem;
-    color:#fff;
-    text-shadow:0 1px 1px rgba(0,0,0,.2);
+    font-family:'Noto Serif KR',serif;font-weight:700;font-size:.7rem;
+    color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.2);
     box-shadow:
       inset 0 -2px 4px rgba(0,0,0,.12),
       inset 0 2px 4px rgba(255,255,255,.25),
       0 2px 6px rgba(0,0,0,.08);
     position:relative;
   }
-
   .history-ball::before{
-    content:'';position:absolute;
-    top:3px;left:7px;
-    width:10px;height:6px;
-    background:rgba(255,255,255,.3);
-    border-radius:50%;
-    transform:rotate(-20deg);
+    content:'';position:absolute;top:3px;left:7px;
+    width:10px;height:6px;background:rgba(255,255,255,.3);
+    border-radius:50%;transform:rotate(-20deg);
   }
 
   .history-ball.yellow{background:linear-gradient(145deg,#fdd835,#f9a825)}
@@ -376,35 +353,13 @@
   .history-ball.gray{background:linear-gradient(145deg,#b0b0b0,#757575)}
   .history-ball.green{background:linear-gradient(145deg,#aed581,#689f38)}
 
-  .history-sep{
-    font-size:.9rem;font-weight:700;
-    color:var(--pink-soft);
-    margin:0 .1rem;
-  }
-
-  .history-time{
-    font-size:.65rem;
-    color:var(--text-light);
-    white-space:nowrap;
-    letter-spacing:.02em;
-  }
-
-  .history-empty{
-    text-align:center;
-    color:var(--text-light);
-    font-size:.85rem;
-    padding:1.5rem 0;
-    opacity:.7;
-  }
+  .history-sep{font-size:.9rem;font-weight:700;color:var(--accent-soft);margin:0 .1rem}
+  .history-time{font-size:.65rem;color:var(--text-light);white-space:nowrap;letter-spacing:.02em}
 
   /* ── 푸터 ── */
   footer{
-    margin-top:3rem;
-    text-align:center;
-    font-size:.72rem;
-    color:var(--text-light);
-    opacity:.6;
-    line-height:1.6;
+    margin-top:3rem;text-align:center;
+    font-size:.72rem;color:var(--text-light);opacity:.6;line-height:1.6;
   }
 
   /* ── 반응형 ── */
@@ -426,11 +381,18 @@
 </head>
 <body>
 
+<!-- 테마 토글 -->
+<button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+  <div class="toggle-knob" id="toggle-knob">🌸</div>
+</button>
+<div class="toggle-label" id="toggle-label">봄 모드</div>
+
 <canvas id="petals-canvas"></canvas>
 
 <div class="page-wrapper">
   <header>
-    <svg class="branch-deco" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 봄 SVG -->
+    <svg class="branch-deco spring" id="deco-spring" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 60 Q60 55 100 40 Q140 25 180 30" stroke="#8B6F5E" stroke-width="2.5" stroke-linecap="round" fill="none"/>
       <path d="M50 50 Q55 35 65 38 Q58 42 55 50 Q52 42 50 50Z" fill="#f8c8d4" opacity=".9"/>
       <path d="M70 42 Q72 28 82 32 Q76 36 74 44 Q71 36 70 42Z" fill="#f0b0c0" opacity=".85"/>
@@ -445,8 +407,31 @@
       <circle cx="96" cy="32" r="2.2" fill="#fdd835" opacity=".6"/>
       <path d="M155 30 Q160 18 168 23 Q162 26 159 33 Q156 25 155 30Z" fill="#f8c8d4" opacity=".65"/>
     </svg>
-    <h1>봄날의 로또</h1>
-    <p class="subtitle">행운의 번호가 꽃처럼 피어납니다</p>
+    <!-- 여름 SVG -->
+    <svg class="branch-deco summer" id="deco-summer" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+      <!-- 태양 -->
+      <circle cx="160" cy="28" r="16" fill="#fbbf24" opacity=".8"/>
+      <circle cx="160" cy="28" r="10" fill="#fde68a"/>
+      <line x1="160" y1="5" x2="160" y2="0" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="175" y1="13" x2="179" y2="9" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="181" y1="28" x2="186" y2="28" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="175" y1="43" x2="179" y2="47" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="145" y1="13" x2="141" y2="9" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="139" y1="28" x2="134" y2="28" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="145" y1="43" x2="141" y2="47" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <!-- 파도 -->
+      <path d="M5 55 Q20 45 40 55 Q60 65 80 55 Q100 45 120 55 Q140 65 160 55 Q180 45 195 55" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" fill="none" opacity=".6"/>
+      <path d="M5 65 Q25 55 45 65 Q65 75 85 65 Q105 55 125 65 Q145 75 165 65 Q185 55 195 65" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".45"/>
+      <path d="M5 73 Q30 64 50 73 Q70 80 90 73 Q110 64 130 73 Q150 80 170 73 Q190 64 195 73" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round" fill="none" opacity=".35"/>
+      <!-- 야자수 잎 -->
+      <path d="M35 60 Q30 30 15 15" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".7"/>
+      <path d="M35 60 Q50 32 70 20" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".7"/>
+      <path d="M35 60 Q25 35 30 18" stroke="#22c55e" stroke-width="2" stroke-linecap="round" fill="none" opacity=".55"/>
+      <path d="M35 60 Q55 38 60 25" stroke="#22c55e" stroke-width="2" stroke-linecap="round" fill="none" opacity=".55"/>
+      <rect x="33" y="58" width="4" height="18" rx="2" fill="#92400e" opacity=".5"/>
+    </svg>
+    <h1 id="main-title">봄날의 로또</h1>
+    <p class="subtitle" id="main-subtitle">행운의 번호가 꽃처럼 피어납니다</p>
   </header>
 
   <div class="main-card">
@@ -454,20 +439,20 @@
       <div class="section-label">추천 번호</div>
       <div id="balls-container" class="balls-row">
         <div class="empty-state" id="empty-state">
-          <span class="flower">🌸</span>
+          <span class="flower" id="empty-icon">🌸</span>
           <span>버튼을 눌러 행운의 번호를 받아보세요</span>
         </div>
       </div>
     </div>
 
     <button class="btn-generate" id="btn-generate" onclick="generateNumbers()">
-      <span class="btn-icon">🍀</span>번호 추천받기
+      <span class="btn-icon" id="btn-icon">🍀</span>번호 추천받기
     </button>
   </div>
 
   <div class="history-section" id="history-section" style="display:none;">
     <div class="history-header">
-      <span class="history-title">🌷 추천 이력</span>
+      <span class="history-title" id="history-title">🌷 추천 이력</span>
       <button class="history-clear" onclick="clearHistory()">모두 지우기</button>
     </div>
     <div class="history-list" id="history-list"></div>
@@ -480,13 +465,87 @@
 </div>
 
 <script>
-// ── 벚꽃 잎 애니메이션 ──
+// ── 테마 ──
+let currentTheme = 'spring';
+
+const themeConfig = {
+  spring: {
+    title: '봄날의 로또',
+    subtitle: '행운의 번호가 꽃처럼 피어납니다',
+    toggleIcon: '🌸',
+    toggleLabel: '봄 모드',
+    emptyIcon: '🌸',
+    btnIcon: '🍀',
+    historyTitle: '🌷 추천 이력',
+    particleColors: [
+      'rgba(248,200,212,0.7)',
+      'rgba(240,176,192,0.6)',
+      'rgba(244,184,204,0.65)',
+      'rgba(255,220,230,0.5)',
+      'rgba(212,232,208,0.4)',
+    ],
+  },
+  summer: {
+    title: '한여름의 로또',
+    subtitle: '파도처럼 밀려오는 행운의 번호',
+    toggleIcon: '🌊',
+    toggleLabel: '여름 모드',
+    emptyIcon: '🏖️',
+    btnIcon: '🐚',
+    historyTitle: '🌴 추천 이력',
+    particleColors: [
+      'rgba(34,211,238,0.5)',
+      'rgba(103,232,249,0.4)',
+      'rgba(165,243,252,0.45)',
+      'rgba(251,191,36,0.35)',
+      'rgba(253,224,71,0.3)',
+    ],
+  }
+};
+
+function toggleTheme(){
+  currentTheme = currentTheme === 'spring' ? 'summer' : 'spring';
+  applyTheme();
+}
+
+function applyTheme(){
+  const cfg = themeConfig[currentTheme];
+  const root = document.documentElement;
+
+  if(currentTheme === 'summer'){
+    root.setAttribute('data-theme','summer');
+  } else {
+    root.removeAttribute('data-theme');
+  }
+
+  document.getElementById('main-title').textContent = cfg.title;
+  document.getElementById('main-subtitle').textContent = cfg.subtitle;
+  document.getElementById('toggle-knob').textContent = cfg.toggleIcon;
+  document.getElementById('toggle-label').textContent = cfg.toggleLabel;
+  document.getElementById('btn-icon').textContent = cfg.btnIcon;
+  document.getElementById('history-title').textContent = cfg.historyTitle;
+  document.title = cfg.title + ' — 행운의 번호 추천';
+
+  const emptyIcon = document.getElementById('empty-icon');
+  if(emptyIcon) emptyIcon.textContent = cfg.emptyIcon;
+
+  // SVG 전환
+  document.getElementById('deco-spring').style.display = currentTheme === 'spring' ? 'block' : 'none';
+  document.getElementById('deco-summer').style.display = currentTheme === 'summer' ? 'block' : 'none';
+
+  // 파티클 색상 갱신
+  particleColors = cfg.particleColors;
+}
+
+// ── 파티클 캔버스 ──
+let particleColors = themeConfig.spring.particleColors;
+
 (function(){
   const canvas = document.getElementById('petals-canvas');
   const ctx = canvas.getContext('2d');
   let W, H;
-  const petals = [];
-  const PETAL_COUNT = 35;
+  const particles = [];
+  const COUNT = 35;
 
   function resize(){
     W = canvas.width = window.innerWidth;
@@ -495,15 +554,7 @@
   resize();
   window.addEventListener('resize', resize);
 
-  const petalColors = [
-    'rgba(248,200,212,0.7)',
-    'rgba(240,176,192,0.6)',
-    'rgba(244,184,204,0.65)',
-    'rgba(255,220,230,0.5)',
-    'rgba(212,232,208,0.4)',
-  ];
-
-  function createPetal(){
+  function create(){
     return {
       x: Math.random() * W,
       y: -20 - Math.random() * 100,
@@ -515,44 +566,89 @@
       wobble: Math.random() * Math.PI * 2,
       wobbleSpeed: 0.01 + Math.random() * 0.02,
       wobbleAmp: 0.3 + Math.random() * 0.8,
-      color: petalColors[Math.floor(Math.random() * petalColors.length)],
       opacity: 0.4 + Math.random() * 0.5,
     };
   }
 
-  for(let i = 0; i < PETAL_COUNT; i++){
-    const p = createPetal();
+  for(let i = 0; i < COUNT; i++){
+    const p = create();
     p.y = Math.random() * H;
-    petals.push(p);
+    particles.push(p);
   }
 
-  function drawPetal(p){
+  function drawSpringPetal(p){
+    const c = particleColors[Math.abs(Math.floor(p.wobble * 10)) % particleColors.length];
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate(p.rotation);
     ctx.globalAlpha = p.opacity;
-    ctx.fillStyle = p.color;
+    ctx.fillStyle = c;
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(p.size * 0.4, -p.size * 0.6, p.size, -p.size * 0.4, p.size * 0.5, 0);
-    ctx.bezierCurveTo(p.size, p.size * 0.4, p.size * 0.4, p.size * 0.6, 0, 0);
+    ctx.bezierCurveTo(p.size*.4, -p.size*.6, p.size, -p.size*.4, p.size*.5, 0);
+    ctx.bezierCurveTo(p.size, p.size*.4, p.size*.4, p.size*.6, 0, 0);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawSummerBubble(p){
+    const c = particleColors[Math.abs(Math.floor(p.wobble * 10)) % particleColors.length];
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.globalAlpha = p.opacity * 0.7;
+    // 물방울/거품 원형
+    ctx.beginPath();
+    ctx.arc(0, 0, p.size * 0.7, 0, Math.PI * 2);
+    ctx.fillStyle = c;
+    ctx.fill();
+    // 하이라이트
+    ctx.beginPath();
+    ctx.arc(-p.size * 0.15, -p.size * 0.2, p.size * 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
     ctx.fill();
     ctx.restore();
   }
 
   function animate(){
     ctx.clearRect(0, 0, W, H);
-    for(let i = 0; i < petals.length; i++){
-      const p = petals[i];
+
+    // 여름 모드: 하단 파도 그리기
+    if(currentTheme === 'summer'){
+      const t = Date.now() * 0.001;
+      ctx.globalAlpha = 0.06;
+      for(let wave = 0; wave < 3; wave++){
+        ctx.beginPath();
+        const baseY = H - 60 + wave * 25;
+        ctx.moveTo(0, baseY);
+        for(let x = 0; x <= W; x += 4){
+          const y = baseY + Math.sin(x * 0.008 + t + wave) * 15 + Math.sin(x * 0.015 + t * 1.5) * 8;
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(W, H);
+        ctx.lineTo(0, H);
+        ctx.closePath();
+        ctx.fillStyle = wave === 0 ? '#22d3ee' : wave === 1 ? '#67e8f9' : '#a5f3fc';
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    for(let i = 0; i < particles.length; i++){
+      const p = particles[i];
       p.wobble += p.wobbleSpeed;
       p.x += p.speedX + Math.sin(p.wobble) * p.wobbleAmp;
       p.y += p.speedY;
       p.rotation += p.rotSpeed;
 
       if(p.y > H + 20 || p.x < -30 || p.x > W + 30){
-        Object.assign(petals[i], createPetal());
+        Object.assign(particles[i], create());
       }
-      drawPetal(p);
+
+      if(currentTheme === 'summer'){
+        drawSummerBubble(p);
+      } else {
+        drawSpringPetal(p);
+      }
     }
     requestAnimationFrame(animate);
   }
@@ -598,27 +694,20 @@ function generateNumbers(){
 
   container.innerHTML = '';
 
-  // 메인 번호 6개
   main.forEach((num, i) => {
     const ball = document.createElement('div');
     ball.className = `ball ${getBallColor(num)}`;
     ball.textContent = num;
     container.appendChild(ball);
-
-    setTimeout(() => {
-      ball.classList.add('bounce', 'revealed');
-    }, i * 150 + 100);
+    setTimeout(() => { ball.classList.add('bounce','revealed'); }, i * 150 + 100);
   });
 
-  // 구분자 +
   const sep = document.createElement('span');
   sep.className = 'separator';
   sep.textContent = '+';
   container.appendChild(sep);
-
   setTimeout(() => { sep.classList.add('show'); }, 6 * 150 + 200);
 
-  // 보너스 번호
   const bonusWrap = document.createElement('div');
   bonusWrap.className = 'bonus-wrap';
   const bonusBall = document.createElement('div');
@@ -632,26 +721,22 @@ function generateNumbers(){
   container.appendChild(bonusWrap);
 
   setTimeout(() => {
-    bonusBall.classList.add('bounce', 'revealed');
+    bonusBall.classList.add('bounce','revealed');
     bonusLabel.classList.add('show');
   }, 7 * 150 + 100);
 
-  // 이력 추가
-  const totalDelay = 7 * 150 + 500;
   setTimeout(() => {
     addToHistory(main, bonus);
     btn.disabled = false;
     isAnimating = false;
-  }, totalDelay);
+  }, 7 * 150 + 500);
 }
 
 function addToHistory(main, bonus){
   const now = new Date();
   const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-
   history.unshift({ main, bonus, time: timeStr });
   if(history.length > 5) history.pop();
-
   renderHistory();
 }
 
@@ -659,10 +744,7 @@ function renderHistory(){
   const section = document.getElementById('history-section');
   const list = document.getElementById('history-list');
 
-  if(history.length === 0){
-    section.style.display = 'none';
-    return;
-  }
+  if(history.length === 0){ section.style.display = 'none'; return; }
 
   section.style.display = 'block';
   list.innerHTML = '';
@@ -711,7 +793,6 @@ function clearHistory(){
   history = [];
   renderHistory();
 }
-
 </script>
 </body>
 </html>
