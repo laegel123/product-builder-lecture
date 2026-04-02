@@ -356,6 +356,28 @@
   .history-sep{font-size:.9rem;font-weight:700;color:var(--accent-soft);margin:0 .1rem}
   .history-time{font-size:.65rem;color:var(--text-light);white-space:nowrap;letter-spacing:.02em}
 
+  /* ── 댓글 섹션 ── */
+  .comments-section{
+    width:100%;
+    margin-top:2.5rem;
+    position:relative;z-index:1;
+  }
+
+  .comments-title{
+    font-family:'Noto Serif KR',serif;
+    font-weight:700;font-size:1.05rem;
+    color:var(--text);
+    margin-bottom:1rem;
+  }
+
+  .comments-box{
+    background:rgba(255,255,255,.7);
+    border:1px solid var(--history-border);
+    border-radius:16px;
+    padding:1.2rem;
+    backdrop-filter:blur(8px);
+  }
+
   /* ── 푸터 ── */
   footer{
     margin-top:3rem;text-align:center;
@@ -456,6 +478,13 @@
       <button class="history-clear" onclick="clearHistory()">모두 지우기</button>
     </div>
     <div class="history-list" id="history-list"></div>
+  </div>
+
+  <div class="comments-section">
+    <div class="comments-title">💬 댓글</div>
+    <div class="comments-box">
+      <div id="disqus_thread"></div>
+    </div>
   </div>
 
   <footer>
@@ -794,5 +823,16 @@ function clearHistory(){
   renderHistory();
 }
 </script>
+
+<!-- Disqus -->
+<script>
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = 'https://lottery-8.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 </html>
