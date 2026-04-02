@@ -397,6 +397,200 @@
     opacity:.7;
   }
 
+  /* ── 당첨번호 섹션 ── */
+  .winning-section{
+    width:100%;
+    margin-top:2.5rem;
+    position:relative;z-index:1;
+  }
+
+  .winning-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:1rem;
+  }
+
+  .winning-title{
+    font-family:'Noto Serif KR',serif;
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--text);
+  }
+
+  .winning-nav{
+    display:flex;gap:.4rem;
+  }
+
+  .winning-nav button{
+    width:30px;height:30px;
+    border-radius:50%;
+    border:1px solid rgba(232,130,154,.2);
+    background:rgba(255,255,255,.7);
+    color:var(--text-light);
+    font-size:.8rem;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .2s ease;
+    font-family:inherit;
+  }
+
+  .winning-nav button:hover{
+    background:var(--pink-soft);
+    color:#fff;
+    border-color:var(--pink-soft);
+  }
+
+  .winning-nav button:disabled{
+    opacity:.3;cursor:not-allowed;
+  }
+
+  .winning-list{
+    display:flex;
+    flex-direction:column;
+    gap:.75rem;
+  }
+
+  .winning-item{
+    background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(255,248,240,.7));
+    border:1px solid rgba(232,130,154,.1);
+    border-radius:16px;
+    padding:1rem 1.2rem;
+    animation:historySlide .4s cubic-bezier(.25,.46,.45,.94) forwards;
+    opacity:0;
+    transform:translateY(12px);
+  }
+
+  .winning-item-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:.7rem;
+  }
+
+  .winning-round{
+    font-family:'Noto Serif KR',serif;
+    font-weight:700;
+    font-size:.9rem;
+    color:var(--pink-deep);
+  }
+
+  .winning-date{
+    font-size:.7rem;
+    color:var(--text-light);
+    letter-spacing:.02em;
+  }
+
+  .winning-balls{
+    display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;
+  }
+
+  .winning-ball{
+    width:36px;height:36px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Noto Serif KR',serif;
+    font-weight:700;font-size:.75rem;
+    color:#fff;
+    text-shadow:0 1px 1px rgba(0,0,0,.2);
+    box-shadow:
+      inset 0 -2px 5px rgba(0,0,0,.12),
+      inset 0 2px 5px rgba(255,255,255,.25),
+      0 2px 8px rgba(0,0,0,.08);
+    position:relative;
+  }
+
+  .winning-ball::before{
+    content:'';position:absolute;
+    top:4px;left:8px;
+    width:11px;height:7px;
+    background:rgba(255,255,255,.3);
+    border-radius:50%;
+    transform:rotate(-20deg);
+  }
+
+  .winning-ball.yellow{background:linear-gradient(145deg,#fdd835,#f9a825)}
+  .winning-ball.blue{background:linear-gradient(145deg,#64b5f6,#1e88e5)}
+  .winning-ball.red{background:linear-gradient(145deg,#ef5350,#c62828)}
+  .winning-ball.gray{background:linear-gradient(145deg,#b0b0b0,#757575)}
+  .winning-ball.green{background:linear-gradient(145deg,#aed581,#689f38)}
+
+  .winning-sep{
+    font-size:1rem;font-weight:700;
+    color:var(--pink-soft);
+    margin:0 .15rem;
+  }
+
+  .winning-prize{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    margin-top:.6rem;
+    padding-top:.55rem;
+    border-top:1px dashed rgba(232,130,154,.12);
+  }
+
+  .winning-prize-label{
+    font-size:.65rem;
+    color:var(--text-light);
+    letter-spacing:.04em;
+  }
+
+  .winning-prize-amount{
+    font-family:'Noto Serif KR',serif;
+    font-weight:700;
+    font-size:.8rem;
+    color:var(--text);
+  }
+
+  .winning-loading{
+    text-align:center;
+    padding:2rem 0;
+    color:var(--text-light);
+    font-size:.85rem;
+  }
+
+  .winning-loading .spinner{
+    display:inline-block;
+    width:20px;height:20px;
+    border:2px solid var(--pink-soft);
+    border-top-color:transparent;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin-right:.5rem;
+    vertical-align:middle;
+  }
+
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .winning-error{
+    text-align:center;
+    padding:1.5rem 0;
+    color:var(--text-light);
+    font-size:.85rem;
+  }
+
+  .winning-error button{
+    margin-top:.6rem;
+    padding:.4rem 1rem;
+    border:1px solid var(--pink-soft);
+    border-radius:20px;
+    background:none;
+    color:var(--pink-deep);
+    font-family:inherit;
+    font-size:.78rem;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+
+  .winning-error button:hover{
+    background:var(--pink-soft);color:#fff;
+  }
+
+  @media(max-width:480px){
+    .winning-ball{width:30px;height:30px;font-size:.65rem}
+  }
+
   /* ── 푸터 ── */
   footer{
     margin-top:3rem;
@@ -471,6 +665,21 @@
       <button class="history-clear" onclick="clearHistory()">모두 지우기</button>
     </div>
     <div class="history-list" id="history-list"></div>
+  </div>
+
+  <div class="winning-section" id="winning-section">
+    <div class="winning-header">
+      <span class="winning-title">🏆 최근 당첨번호</span>
+      <div class="winning-nav">
+        <button id="btn-prev" onclick="loadPrevPage()" disabled>&larr;</button>
+        <button id="btn-next" onclick="loadNextPage()" disabled>&rarr;</button>
+      </div>
+    </div>
+    <div class="winning-list" id="winning-list">
+      <div class="winning-loading">
+        <span class="spinner"></span>당첨번호를 불러오는 중...
+      </div>
+    </div>
   </div>
 
   <footer>
@@ -711,6 +920,162 @@ function clearHistory(){
   history = [];
   renderHistory();
 }
+
+// ── 최근 당첨번호 ──
+const ITEMS_PER_PAGE = 5;
+let winningData = [];
+let winningPage = 0;
+let latestRound = null;
+let isLoadingWinning = false;
+
+async function fetchLottoRound(round){
+  const url = `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${round}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  if(data.returnValue !== 'success') return null;
+  return {
+    round: data.drwNo,
+    date: data.drwNoDate,
+    main: [data.drwtNo1, data.drwtNo2, data.drwtNo3, data.drwtNo4, data.drwtNo5, data.drwtNo6].sort((a,b)=>a-b),
+    bonus: data.bnusNo,
+    prize: data.firstWinamnt,
+    winners: data.firstPrzwnerCo,
+  };
+}
+
+async function findLatestRound(){
+  // 2002년 12월 7일 1회차 기준 추정
+  const start = new Date(2002, 11, 7);
+  const now = new Date();
+  const weeks = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+  let guess = weeks;
+
+  // 위로 탐색하며 최신 회차 찾기
+  for(let i = guess + 2; i >= guess - 5; i--){
+    try {
+      const data = await fetchLottoRound(i);
+      if(data) return i;
+    } catch(e){ /* continue */ }
+  }
+  return guess;
+}
+
+async function loadWinningNumbers(){
+  const list = document.getElementById('winning-list');
+
+  try {
+    if(!latestRound){
+      latestRound = await findLatestRound();
+    }
+
+    const totalToLoad = ITEMS_PER_PAGE;
+    const startRound = latestRound - (winningPage * ITEMS_PER_PAGE);
+    const promises = [];
+
+    for(let i = 0; i < totalToLoad; i++){
+      const round = startRound - i;
+      if(round < 1) break;
+      // 캐시 확인
+      const cached = winningData.find(d => d.round === round);
+      if(cached){
+        promises.push(Promise.resolve(cached));
+      } else {
+        promises.push(fetchLottoRound(round));
+      }
+    }
+
+    const results = await Promise.all(promises);
+    const valid = results.filter(Boolean);
+
+    // 캐시에 저장
+    valid.forEach(d => {
+      if(!winningData.find(w => w.round === d.round)){
+        winningData.push(d);
+      }
+    });
+
+    renderWinningNumbers(valid);
+    updateWinningNav();
+
+  } catch(e){
+    list.innerHTML = `
+      <div class="winning-error">
+        당첨번호를 불러오지 못했습니다.<br>
+        <button onclick="retryLoadWinning()">다시 시도</button>
+      </div>`;
+  }
+}
+
+function renderWinningNumbers(items){
+  const list = document.getElementById('winning-list');
+  list.innerHTML = '';
+
+  items.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'winning-item';
+    el.style.animationDelay = `${idx * 0.07}s`;
+
+    let prizeText = '';
+    if(item.prize){
+      const formatted = item.prize >= 100000000
+        ? `${Math.floor(item.prize / 100000000)}억 ${Math.floor((item.prize % 100000000) / 10000) > 0 ? Math.floor((item.prize % 100000000) / 10000) + '만' : ''}원`
+        : `${Math.floor(item.prize / 10000)}만원`;
+      prizeText = `
+        <div class="winning-prize">
+          <span class="winning-prize-label">1등 상금</span>
+          <span class="winning-prize-amount">${formatted} (${item.winners}명)</span>
+        </div>`;
+    }
+
+    el.innerHTML = `
+      <div class="winning-item-top">
+        <span class="winning-round">제 ${item.round}회</span>
+        <span class="winning-date">${item.date}</span>
+      </div>
+      <div class="winning-balls">
+        ${item.main.map(n => `<span class="winning-ball ${getBallColor(n)}">${n}</span>`).join('')}
+        <span class="winning-sep">+</span>
+        <span class="winning-ball ${getBallColor(item.bonus)}">${item.bonus}</span>
+      </div>
+      ${prizeText}`;
+
+    list.appendChild(el);
+  });
+}
+
+function updateWinningNav(){
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const maxPage = Math.floor((latestRound - 1) / ITEMS_PER_PAGE);
+
+  btnNext.disabled = winningPage >= maxPage;
+  btnPrev.disabled = winningPage <= 0;
+}
+
+function loadPrevPage(){
+  if(winningPage > 0){
+    winningPage--;
+    document.getElementById('winning-list').innerHTML =
+      '<div class="winning-loading"><span class="spinner"></span>불러오는 중...</div>';
+    loadWinningNumbers();
+  }
+}
+
+function loadNextPage(){
+  winningPage++;
+  document.getElementById('winning-list').innerHTML =
+    '<div class="winning-loading"><span class="spinner"></span>불러오는 중...</div>';
+  loadWinningNumbers();
+}
+
+function retryLoadWinning(){
+  document.getElementById('winning-list').innerHTML =
+    '<div class="winning-loading"><span class="spinner"></span>당첨번호를 불러오는 중...</div>';
+  loadWinningNumbers();
+}
+
+// 페이지 로드 시 당첨번호 불러오기
+loadWinningNumbers();
 </script>
 </body>
 </html>
