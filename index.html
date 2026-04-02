@@ -931,8 +931,16 @@ let isLoadingWinning = false;
 async function fetchLottoRound(round){
   const url = `/api/lotto?drwNo=${round}`;
   const res = await fetch(url);
-  const data = await res.json();
+  if(!res.ok) return null;
+
+  let data;
+  try {
+    data = await res.json();
+  } catch(e){ return null; }
+
   if(data.returnValue !== 'success') return null;
+  if(!data.drwtNo1) return null;
+
   return {
     round: data.drwNo,
     date: data.drwNoDate,
@@ -950,14 +958,16 @@ async function findLatestRound(){
   const weeks = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
   let guess = weeks;
 
-  // 위로 탐색하며 최신 회차 찾기
-  for(let i = guess + 2; i >= guess - 5; i--){
+  // 이진 탐색: 너무 높은 회차부터 내려오며 찾기
+  for(let i = guess + 5; i >= Math.max(1, guess - 10); i--){
     try {
       const data = await fetchLottoRound(i);
       if(data) return i;
     } catch(e){ /* continue */ }
   }
-  return guess;
+
+  // 그래도 못찾으면 확실한 최근 회차로 fallback
+  return Math.max(1, guess - 10);
 }
 
 async function loadWinningNumbers(){
@@ -987,6 +997,10 @@ async function loadWinningNumbers(){
     const results = await Promise.all(promises);
     const valid = results.filter(Boolean);
 
+    if(valid.length === 0){
+      throw new Error('유효한 당첨 데이터가 없습니다');
+    }
+
     // 캐시에 저장
     valid.forEach(d => {
       if(!winningData.find(w => w.round === d.round)){
@@ -998,9 +1012,11 @@ async function loadWinningNumbers(){
     updateWinningNav();
 
   } catch(e){
+    console.error('당첨번호 로딩 실패:', e);
     list.innerHTML = `
       <div class="winning-error">
         당첨번호를 불러오지 못했습니다.<br>
+        <small style="opacity:.5">${e.message || ''}</small><br>
         <button onclick="retryLoadWinning()">다시 시도</button>
       </div>`;
   }
